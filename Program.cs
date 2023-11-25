@@ -1,6 +1,11 @@
+using System.Text;
 using AplikacjaMetodyki.Data;
+using AplikacjaMetodyki.IoC;
+using AplikacjaMetodyki.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AplikacjaMetodyki
 {
@@ -10,17 +15,25 @@ namespace AplikacjaMetodyki
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            #region EF core - DbContext registrations
+            builder.Services.AddTransient<MsSqlAppDbContextConnectionString>();
+            builder.Services.AddDbContext<ApplicationDbContext>((sp, o) =>
+            {
+                var connectionString = sp.GetRequiredService<MsSqlAppDbContextConnectionString>().Value;
+                o.UseSqlServer(connectionString);
+            });
+            #endregion
+            
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            #region Connector Database migrations
+            app.UseDatabaseMigrations();
+            #endregion
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -30,7 +43,6 @@ namespace AplikacjaMetodyki
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -44,6 +56,7 @@ namespace AplikacjaMetodyki
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
             app.MapRazorPages();
 
             app.Run();

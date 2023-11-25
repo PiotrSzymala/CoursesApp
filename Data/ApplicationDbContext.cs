@@ -1,4 +1,5 @@
 ﻿using AplikacjaMetodyki.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,12 @@ namespace AplikacjaMetodyki.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
+
+            modelBuilder.Entity<IdentityUserLogin<string>>().HasNoKey();
+            modelBuilder.Entity<IdentityUserRole<string>>().HasNoKey();
+            modelBuilder.Entity<IdentityUserToken<string>>().HasNoKey();
+
+            modelBuilder.Entity<User>().ToTable("Users")
                 .HasMany(u => u.Signups)
                 .WithOne(s => s.User)
                 .HasForeignKey(s => s.UserId);
@@ -63,7 +69,7 @@ namespace AplikacjaMetodyki.Data
             modelBuilder.Entity<Lesson>()
                 .HasOne(l => l.LessonVideo)
                 .WithOne(lv => lv.Lesson)
-                .HasForeignKey<LessonVideo>(lv => lv.LessonId);
+                .HasForeignKey<LessonVideo>(lv => lv.Id);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.ForumPosts)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AplikacjaMetodyki.Models
@@ -9,21 +10,19 @@ namespace AplikacjaMetodyki.Models
         public int PaymentId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public User User { get; set; }
 
         [Required]
+        [ForeignKey("Course")]
         public int CourseId { get; set; }
+        public Course Course { get; set; }
 
         [Required]
         public string Status { get; set; }
 
         [Required]
         public DateTime CreatedAt { get; set; }
-
-        [ForeignKey("UserId")]
-        public User User { get; set; }
-
-        [ForeignKey("CourseId")]
-        public Course Course { get; set; }
     }
 }
