@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AplikacjaMetodyki.Models
@@ -12,10 +13,14 @@ namespace AplikacjaMetodyki.Models
         public int CourseDateId { get; set; }
 
         [Required]
+        [ForeignKey("Course")]
         public int CourseId { get; set; }
+        public Course Course { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public User User { get; set; }
 
         [Required]
         public DateTime ActiveFrom { get; set; }
@@ -23,12 +28,8 @@ namespace AplikacjaMetodyki.Models
         [Required]
         public DateTime ExpiresIn { get; set; }
 
-        [ForeignKey("UserId")]
-        public User User { get; set; }
-
+        // Assuming CourseDate has a primary key of type int
+        [ForeignKey("CourseDateId")]
         public CourseDate CourseDate { get; set; }
-
-        [ForeignKey("CourseId")]
-        public Course Course { get; set; }
     }
 }

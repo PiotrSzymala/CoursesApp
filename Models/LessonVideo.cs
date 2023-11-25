@@ -6,7 +6,7 @@ namespace AplikacjaMetodyki.Models
     public class LessonVideo
     {
         [Key]
-        public int LessonId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Source { get; set; }
@@ -14,7 +14,8 @@ namespace AplikacjaMetodyki.Models
         [Required]
         public bool Active { get; set; }
 
-        [ForeignKey("LessonId")]
+        [ForeignKey("Lesson")] 
+        public int LessonId { get; set; }
         public Lesson Lesson { get; set; }
     }
 }

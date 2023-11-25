@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace AplikacjaMetodyki.Models
 {
-    public class User
+    public class User : IdentityUser
     {
-        [Key]
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Firstname { get; set; }

@@ -9,10 +9,14 @@ namespace AplikacjaMetodyki.Models
         public int PostId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        [ForeignKey("User")] // This establishes the link to the User entity.
+        public string UserId { get; set; }
+        public User User { get; set; }
 
         [Required]
+        [ForeignKey("ForumCategory")] // This establishes the link to the ForumCategory entity.
         public int CategoryId { get; set; }
+        public ForumCategory ForumCategory { get; set; }
 
         [Required]
         [MaxLength(300)]
@@ -23,10 +27,5 @@ namespace AplikacjaMetodyki.Models
 
         [Required]
         public string AttachedMedia { get; set; }
-
-        public User User { get; set; }
-
-        [ForeignKey("CategoryId")]
-        public ForumCategory ForumCategory { get; set; }
     }
 }
